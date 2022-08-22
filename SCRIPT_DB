@@ -1,0 +1,74 @@
+create or replace PACKAGE PKG_PRODUCTO IS
+  TYPE TIPOCURSOR IS  REF CURSOR;
+----------------------------------------------------------------------
+PROCEDURE SP_LISTAR_PRODUCTOS
+(
+  oListado                    OUT TIPOCURSOR
+);
+----------------------------------------------------------------------
+PROCEDURE SP_ELIMINAR_PRODUCTO
+( 
+  nIdProducto            IN NUMBER,
+  pRetorno                OUT NUMBER,
+  sError                OUT VARCHAR2
+);
+----------------------------------------------------------------------
+PROCEDURE SP_EDITAR_PRODUCTO
+(
+  nIdProducto            IN NUMBER,
+  sNombre                IN VARCHAR2,
+  nTipo                 IN NUMBER,
+  nPais                 IN NUMBER,
+  nPrecio               IN NUMBER,
+  pRetorno                OUT NUMBER,
+  sError                OUT VARCHAR2
+);
+----------------------------------------------------------------------
+PROCEDURE SP_INSERTAR_PRODUCTO
+(
+  sNombre                 IN VARCHAR2,
+  nTipo                  IN NUMBER,
+  nPais                  IN NUMBER,
+  nPrecio                  IN NUMBER,
+  pRetorno                OUT NUMBER,
+  sError                OUT VARCHAR2
+);
+----------------------------------------------------------------------
+PROCEDURE SP_LISTAR_TIPOS
+(
+  oListado                    OUT TIPOCURSOR
+);
+----------------------------------------------------------------------
+PROCEDURE SP_LISTAR_PAISES
+(
+  oListado                    OUT TIPOCURSOR
+);
+----------------------------------------------------------------------
+END PKG_PRODUCTO;
+[16:45]
+CREATE TABLE tipo(
+    id number (20,0) not null,
+    nombre varchar2(20) not null,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE pais(
+    id number (20,0) not null,
+    nombre varchar2(20) not null,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE productos(
+    id number (20,0) not null,
+    nombre varchar2(20) not null,
+    idtipo number(20,0),
+    idpais number(20,0),
+    CONSTRAINT productos_tipo_FK FOREIGN KEY (idtipo) REFERENCES tipo(id),
+    CONSTRAINT productos_pais_FK FOREIGN KEY (idpais) REFERENCES pais(id),
+    precio number(10,2),
+    PRIMARY KEY(id)
+);
+
+INSERT INTO tipo (id, nombre) VALUES (1, "Nokia");
+INSERT INTO pais (id, nombre) VALUES (1, "Peru");
+INSERT INTO productos (id, nombre, idtipo, idpais, precio) VALUES (1, "celular", 1, 1, 20);
