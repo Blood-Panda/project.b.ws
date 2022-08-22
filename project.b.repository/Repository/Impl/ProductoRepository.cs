@@ -47,20 +47,7 @@ namespace project.b.repository.Repository.Impl
                             int posPais = oDrd.GetOrdinal("PAIS");
                             int posPrecio = oDrd.GetOrdinal("PRECIO");
 
-                            while (oDrd.Read())
-                            {
-                                ProductoEntity oEntidad = new ProductoEntity();
-
-                                oEntidad.id = oDrd.GetInt32DBNull(posId);
-                                oEntidad.nombre = oDrd.GetStringDBNull(posNombre);
-                                oEntidad.tipo.id = oDrd.GetInt32DBNull(posIdTipo);
-                                oEntidad.tipo.descripcion = oDrd.GetStringDBNull(posTipo);
-                                oEntidad.pais.id = oDrd.GetInt32DBNull(posIdPais);
-                                oEntidad.pais.descripcion = oDrd.GetStringDBNull(posPais);
-                                oEntidad.precio = oDrd.GetDoubleDBNull(posPrecio);
-
-                                list.Add(oEntidad);
-                            }
+                            while (oDrd.Read()) { ProductoEntity oEntidad = new ProductoEntity(); oEntidad.id = oDrd.GetInt32DBNull(posId); oEntidad.nombre = oDrd.GetStringDBNull(posNombre); TipoEntity oTipo = new TipoEntity(); oTipo.id = oDrd.GetInt32DBNull(posIdTipo); oTipo.descripcion = oDrd.GetStringDBNull(posTipo); PaisEntity oPais = new PaisEntity(); oPais.id = oDrd.GetInt32DBNull(posIdPais); oPais.descripcion = oDrd.GetStringDBNull(posPais); oEntidad.tipo = oTipo; oEntidad.pais = oPais; oEntidad.precio = oDrd.GetDoubleDBNull(posPrecio); list.Add(oEntidad); }
                         }
                     }
                 }
@@ -130,7 +117,7 @@ namespace project.b.repository.Repository.Impl
 
                             res = cmd.ExecuteNonQuery();
                             sResult = Convert.ToString(cmd.Parameters["pRetorno"].Value);
-                            String pError = Convert.ToString(cmd.Parameters["pError"].Value);                            
+                            String pError = Convert.ToString(cmd.Parameters["pError"].Value);
                         }
                     }
                 }
