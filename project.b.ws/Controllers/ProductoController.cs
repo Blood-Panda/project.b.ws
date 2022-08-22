@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using project.b.entity.Entity;
 using project.b.service.Service;
 using project.b.support.SupportDto;
@@ -43,6 +44,15 @@ namespace project.b.ws.Controllers
         [Route("EditarProducto")]
         public IActionResult EditarProducto(ProductoEntity producto)
         {
+            var validator = new ProductoEntityValidator();
+            ValidationResult result = validator.Validate(producto);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"Error en el campo '{error.PropertyName}' por el motivo de '{error.ErrorMessage}'");
+                }
+            }
             var response = new Response<string>();
             response = _productoService.EditarProducto(producto);
 
@@ -78,10 +88,22 @@ namespace project.b.ws.Controllers
 
         [HttpPost]
         [Route("RegistrarProducto")]
-        public IActionResult RegistrarProducto(ProductoEntity periodo)
+        public IActionResult RegistrarProducto(ProductoEntity producto)
         {
             var response = new Response<string>();
-            response = _productoService.RegistrarProducto(periodo);
+            var validator = new ProductoEntityValidator();
+            ValidationResult result = validator.Validate(producto);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    response.IsSuccess = false;
+                    response.Mensaje = $"Error en el campo '{error.PropertyName}' por el motivo de '{error.ErrorMessage}'";
+                    return Ok(response);
+                    //return StatusCode(StatusCodes.Status500InternalServerError, $"Error en el campo '{error.PropertyName}' por el motivo de '{error.ErrorMessage}'");
+                }
+            }
+            response = _productoService.RegistrarProducto(producto);
 
             if (!response.IsSuccess)
             {
